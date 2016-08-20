@@ -114,6 +114,7 @@ def create_test_kernel(user_config=None):
     # type: (Dict) -> ServiceContainer
 
     kernel = Kernel()
+    logger = Mock()
 
     config = create_core_test_config(user_config)
 
@@ -121,9 +122,9 @@ def create_test_kernel(user_config=None):
     kernel.container.register_singleton('pgoapi', PGoApiMock())
     kernel.container.register_singleton(
         'plugin_manager',
-        PluginManager(os.path.dirname(os.path.realpath(__file__)) + '/plugins')
+        PluginManager(os.path.dirname(os.path.realpath(__file__)) + '/plugins', logger)
     )
-    kernel.container.register_singleton('event_manager', EventManager())
+    kernel.container.register_singleton('event_manager', EventManager(logger))
 
     kernel.container.set_parameter('path_finder', config['movement']['path_finder'])
     kernel.container.set_parameter('navigator', config['movement']['path_finder'])
@@ -172,8 +173,9 @@ def create_core_test_config(user_config=None):
 def create_mock_bot(user_config=None):
     config_namespace = create_core_test_config(user_config)
 
-    event_manager = EventManager()
-    logger = Logger(event_manager)
+    logger = Logger()
+    event_manager = EventManager(logger)
+    logger.setEventManager(event_manager)
     api_wrapper = create_mock_api_wrapper(config_namespace)
     player_service = Player(api_wrapper, event_manager, logger)
     pokemon_service = Pokemon(api_wrapper)
