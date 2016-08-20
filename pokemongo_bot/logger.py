@@ -86,7 +86,7 @@ class Logger(object):
             log_filename = self.config['logging']['file_name']
 
             # log rotation every minute
-            handlerFile = TimedRotatingFileHandler(os.path.join(log_path, 'pgolog'),  when='M')
+            handlerFile = TimedRotatingFileHandler(os.path.join(log_path, 'pgolog'), when='MIDNIGHT')
             handlerFile.suffix = log_filename
             handlerFile.setLevel(logging.DEBUG)
             handlerFile.setFormatter(logging.Formatter(u"[%(asctime)s] %(levelname)-8s [%(prefix)-s] %(message)s"))

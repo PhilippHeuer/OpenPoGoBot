@@ -47,8 +47,8 @@ class Stepper(object):
 
         if destination.name:
             self.logger.info("Walking towards {} ({} away, eta {})".format(destination.name,
-                                                                          format_dist(dist, self.config["mapping"]["distance_unit"]),
-                                                                          format_time(destination.get_step_count())))
+                                                                           format_dist(dist, self.config["mapping"]["distance_unit"]),
+                                                                           format_time(destination.get_step_count())))
 
         for step in destination.step():
             if distance(self.current_lat, self.current_lng, destination.target_lat, destination.target_lng) < 30:

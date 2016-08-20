@@ -16,7 +16,8 @@ class LoggerTest(unittest.TestCase):
         out = StringIO()
         sys.stdout = out
 
-        logger = Logger().getLogger('Test')
+        config_core = Mock()
+        logger = Logger(config_core).getLogger('Test')
 
         logger.logger.info("log row", color="yellow", fire_event=False)
         output = out.getvalue().strip()

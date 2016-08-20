@@ -158,6 +158,12 @@ def create_core_test_config(user_config=None):
             "navigator_campsite": None,
             "walk_speed": 4.16,
         },
+        "logging": {
+            "log_to_file": False,
+            "log_directory": "logs",
+            "log_directory_individual": None,
+            "file_name": "%Y-%m-%d.log"
+        },
         "plugins": {
             "exclude": [],
             "include": ['./tests/plugins'],
@@ -173,7 +179,7 @@ def create_core_test_config(user_config=None):
 def create_mock_bot(user_config=None):
     config_namespace = create_core_test_config(user_config)
 
-    logger = Logger()
+    logger = Logger(config_namespace)
     event_manager = EventManager(logger)
     logger.setEventManager(event_manager)
     api_wrapper = create_mock_api_wrapper(config_namespace)
