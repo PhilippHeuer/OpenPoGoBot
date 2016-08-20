@@ -44,7 +44,7 @@ class Logger(object):
         handlerConsole = colorlog.StreamHandler()
         handlerConsole.setLevel(logging.DEBUG)
         handlerConsole.setFormatter(ColoredFormatter(
-            u"[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s [%(prefix)-s] %(message_log_color)s%(message)s",
+            u"[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s [%(prefix)-s] %(message_color)s%(message)s",
             datefmt='%Y-%m-%d %H:%M:%S',
             reset=True,
             log_colors={
@@ -131,7 +131,7 @@ class Logger(object):
         # logger data
         logger_extra = {
             'prefix': prefix,
-            'message_log_color': messageColor
+            'message_color': messageColor
         }
 
         return logging.LoggerAdapter(self._logger, logger_extra)
