@@ -24,11 +24,11 @@ class BotTest(unittest.TestCase):
     @staticmethod
     def test_init():
         logger = Mock()
-        logger.log = Mock(return_value=None)
+        logger.info = Mock(return_value=None)
 
         config_namespace = create_core_test_config()
         api_wrapper = create_mock_api_wrapper(config_namespace)
-        event_manager = EventManager()
+        event_manager = EventManager(logger)
         player_service = Player(api_wrapper, event_manager, logger)
         pokemon_service = PokemonService(api_wrapper)
         mapper = Mapper(config_namespace, api_wrapper, Mock(), logger)
