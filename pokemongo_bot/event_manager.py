@@ -25,7 +25,7 @@ class Event(object):
 
     def fire(self, **kwargs):
         if self.num_listeners == 0:
-            self.logger.warning("WARNING: No handler has registered to handle event \"{}\"".format(self.name))
+            self.logger.warning("No handler has registered to handle event \"{}\"".format(self.name))
 
         # Sort events by priorities from greatest to least
         priorities = sorted(self.listeners, key=lambda event_priority: event_priority)

@@ -82,11 +82,11 @@ class PokemonGoBot(object):
         self._set_starting_position()
 
         while not self.player_service.login():
-            self.logger.error('Login Error, server busy')
+            self.logger.error('Login Error, server busy', 'red')
             self.logger.info('Waiting 15 seconds before trying again...')
             time.sleep(15)
 
-        self.logger.info('Login to Pokemon Go successful.', color='green')
+        self.logger.info('Login to Pokemon Go successful.', 'green')
 
     def run(self):
         map_cells = self.mapper.get_cells(

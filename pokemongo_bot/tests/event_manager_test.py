@@ -118,7 +118,7 @@ class EventManagerTest(unittest.TestCase):
         event_manager.events['test'] = Event('test', logger)
         event_manager.fire('test', value=None)
 
-        assert 'WARNING: No handler has registered to handle event "test"' in out.getvalue().strip()
+        assert 'No handler has registered to handle event "test"' in out.getvalue().strip()
 
     @staticmethod
     def test_fire_with_context():
