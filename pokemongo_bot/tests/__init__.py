@@ -104,7 +104,8 @@ class PGoApiRequestMock(pgoapi.pgoapi.PGoApiRequest):
 def create_mock_api_wrapper(config):
     # type: (Dict) -> PoGoApi
     pgoapi_instance = PGoApiMock()
-    api_wrapper = api.PoGoApi(pgoapi_instance, config)
+    logger = Logger()
+    api_wrapper = api.PoGoApi(pgoapi_instance, logger, config)
     api_wrapper.get_expiration_time = MagicMock(return_value=1000000)
     api_wrapper.set_position(0, 0, 0)
     return api_wrapper

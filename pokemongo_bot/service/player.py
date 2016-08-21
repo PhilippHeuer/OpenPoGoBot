@@ -35,7 +35,7 @@ class Player(object):
             sleep(2)
 
         if response_dict is None:
-            self._logger.error('Failed to retrieve player and inventory stats', color='red')
+            self._logger.error('Failed to retrieve player and inventory stats', 'red')
             return False
 
         self._player = response_dict['player']

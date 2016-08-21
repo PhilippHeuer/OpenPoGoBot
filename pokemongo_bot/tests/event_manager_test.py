@@ -2,7 +2,7 @@ import unittest
 from mock import Mock
 
 from pokemongo_bot.event_manager import EventManager, Event
-
+from pokemongo_bot.logger import Logger
 
 class EventManagerTest(unittest.TestCase):
     @staticmethod
@@ -112,8 +112,7 @@ class EventManagerTest(unittest.TestCase):
         out = StringIO()
         sys.stdout = out
 
-        # TODO: Needs a real logger instance, otherwise there won't be any messages
-        logger = Mock()
+        logger = Logger()
         event_manager = EventManager(logger)
 
         event_manager.events['test'] = Event('test', logger)
@@ -143,7 +142,7 @@ class EventManagerTest(unittest.TestCase):
 
         out = StringIO()
         sys.stdout = out
-        logger = Mock()
+        logger = Logger()
         event_manager = EventManager(logger)
 
         event_manager.events['test'] = Event('test', logger)
@@ -159,7 +158,7 @@ class EventManagerTest(unittest.TestCase):
 
         out = StringIO()
         sys.stdout = out
-        logger = Mock()
+        logger = Logger()
         event_manager = EventManager(logger)
 
         event_manager.events['test'] = Event('test', logger)
@@ -176,7 +175,7 @@ class EventManagerTest(unittest.TestCase):
         out = StringIO()
         sys.stdout = out
 
-        logger = Mock()
+        logger = Logger()
         event_manager = EventManager(logger)
 
         def test_listener_1(bot=None):
