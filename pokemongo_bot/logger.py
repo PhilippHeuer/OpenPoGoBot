@@ -42,14 +42,14 @@ class Logger(object):
         self._logger.setLevel(logging.DEBUG)
 
         # UnitTest Running? Write to STDOUT without colors for Assertions
-        if self.is_unittest():
+        if self.is_test():
             handlerStream = logging.StreamHandler(sys.stdout)
             handlerStream.setLevel(logging.DEBUG)
             handlerStream.setFormatter(logging.Formatter(u"[%(asctime)s] %(levelname)-8s [%(prefix)-s] %(message)s"))
             self._logger.addHandler(handlerStream)
 
         # Handler: Console [ColorLog] - Supress on UnitTest to prevent log spamming
-        if self.is_unittest() is False:
+        if self.is_test() is False:
             handlerConsole = colorlog.StreamHandler()
             handlerConsole.setLevel(logging.DEBUG)
             handlerConsole.setFormatter(ColoredFormatter(
@@ -161,10 +161,10 @@ class Logger(object):
     # Check for UnitTest
     # Credits to http://stackoverflow.com/users/3803152/thesounddefense
     @staticmethod
-    def is_unittest():
+    def is_test():
         current_stack = inspect.stack()
         for stack_frame in current_stack:
-            for program_line in stack_frame[4]:    # This element of the stack frame contains
-                if "unittest" in program_line:       # some contextual program lines
-                    return True
+            # returns None when running the tests
+            if stack_frame[4] == None:
+                return True
         return False
