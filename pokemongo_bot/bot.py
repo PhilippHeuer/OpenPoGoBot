@@ -81,10 +81,20 @@ class PokemonGoBot(object):
         # provide player position on the earth
         self._set_starting_position()
 
+        # login
+        self.repeat_login()
+
+    # defined seperate, to allow a new login after proxy changing
+    def repeat_login(self):
         while not self.player_service.login():
             self.logger.error('Login Error, server busy', 'red')
             self.logger.info('Waiting 15 seconds before trying again...')
-            time.sleep(15)
+
+            # check if a plugin registered network_ipban
+            if self.event_manager.has_listeners('network_ipban'):
+                self.event_manager.fire('network_ipban', delay=10)
+            else:
+                time.sleep(15)
 
         self.logger.info('Login to Pokemon Go successful.', 'green')
 

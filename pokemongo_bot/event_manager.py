@@ -105,6 +105,12 @@ class EventManager(object):
         if name in self.events:
             self.events[name].remove_listener(listener)
 
+    def has_listeners(self, name):
+        if name in self.events:
+            if self.events[name].num_listeners > 0:
+                return True
+        return False
+
     def get_registered_events(self):
         event_list = []
         for event_name in self.events:

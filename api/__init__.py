@@ -10,10 +10,11 @@ from app import kernel
 from .state_manager import StateManager
 from .exceptions import AccountBannedException
 
-@kernel.container.register('api_wrapper', ['@pgoapi', '@logger'], {'provider': '%pogoapi.provider%', 'username': '%pogoapi.username%', 'password': '%pogoapi.password%', 'shared_lib': '%pogoapi.shared_lib%'})
+@kernel.container.register('api_wrapper', ['@pgoapi', '@event_manager', '@logger'], {'provider': '%pogoapi.provider%', 'username': '%pogoapi.username%', 'password': '%pogoapi.password%', 'shared_lib': '%pogoapi.shared_lib%'})
 class PoGoApi(object):
-    def __init__(self, api, logger, provider="google", username="", password="", shared_lib="encrypt.dll"):
+    def __init__(self, api, event_manager, logger, provider="google", username="", password="", shared_lib="encrypt.dll"):
         self._api = api
+        self.event_manager = event_manager
         self.logger = logger.getLogger('API')
         self.provider = provider
         self.username = username
@@ -112,8 +113,10 @@ class PoGoApi(object):
                 continue
             except ServerSideAccessForbiddenException:
                 # 403 Forbidden
-                self.logger.critical('Your IP address is most likely banned. Try on a different IP/machine.')
-                exit(1)
+                return_data = self.event_manager.fire('network_ipban')
+                if return_data['exit_bot'] is True:
+                    self.logger.critical('Your IP address is most likely banned. Try on a different IP/machine.')
+                    exit(1)
             except UnexpectedResponseException:
                 self.logger.warning('Got a non-200 HTTP response from API. Retrying in 10 seconds...')
                 time.sleep(10)
