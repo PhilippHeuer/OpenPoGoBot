@@ -9,6 +9,7 @@ class Player(object):
         self._api_wrapper = api_wrapper
         self._event_manager = event_manager
         self._logger = logger.getLogger()
+        self._logger_egg = logger.getLogger('Egg')
         self._logged_in = False
 
         self._eggs = None
@@ -122,13 +123,13 @@ class Player(object):
 
         if len(self._player.hatched_eggs):
             self._player.hatched_eggs.pop(0)
-            self._logger.info("[Egg] Hatched an egg!", "green")
+            self._logger_egg.info("Hatched an egg!", "green")
 
     def get_hatched_eggs(self):
         self._api_wrapper.get_hatched_eggs().call()
         if len(self._player.hatched_eggs):
             self._player.hatched_eggs.pop(0)
-            self._logger.info("[Egg] Hatched an egg!", "green")
+            self._logger_egg.info("Hatched an egg!", "green")
 
     def check_awarded_badges(self):
         self._api_wrapper.check_awarded_badges().call()

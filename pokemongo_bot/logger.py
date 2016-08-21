@@ -35,7 +35,7 @@ class Logger(object):
 
     def __init__(self, config=None):
         self.config = config
-        self.log_prefix = 'Bot'
+        self.log_prefix = None
 
         # init logger
         self._logger = logging.getLogger(__name__)
@@ -73,8 +73,12 @@ class Logger(object):
             ))
             self._logger.addHandler(handlerConsole)
 
+        # Config Deprecated?
+        if self.config is not None and 'logging' not in self.config.keys():
+            self.error("Configuration Deprecated: Please see config.yml.example to add the logging sector!", "red")
+
         # Handler: File
-        if self.config is not None and self.config['logging']['log_to_file']:
+        if self.config is not None and 'logging' in self.config.keys() and self.config['logging']['log_to_file']:
             log_directory = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), self.config['logging']['log_directory'])
             log_directory_custom = None
 

@@ -212,7 +212,7 @@ class BotTest(unittest.TestCase):
 
             sleep.assert_any_call(15)
 
-        bot.logger.error.assert_any_call('Login Error, server busy')
+        bot.logger.error.assert_any_call('Login Error, server busy', 'red')
         bot.logger.info.assert_any_call('Waiting 15 seconds before trying again...')
 
     def test_run(self):
