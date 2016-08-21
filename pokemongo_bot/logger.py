@@ -11,6 +11,7 @@ import copy
 import os
 import sys
 import time
+import inspect
 
 # --
 # Project Dependencies
@@ -32,7 +33,7 @@ from colorlog.escape_codes import escape_codes, parse_colors
 class Logger(object):
     event_manager = None
 
-    def __init__(self, config):
+    def __init__(self, config=None):
         self.config = config
         self.log_prefix = 'Bot'
 
@@ -40,32 +41,40 @@ class Logger(object):
         self._logger = logging.getLogger(__name__)
         self._logger.setLevel(logging.DEBUG)
 
-        # Handler: Console [ColorLog]
-        handlerConsole = colorlog.StreamHandler()
-        handlerConsole.setLevel(logging.DEBUG)
-        handlerConsole.setFormatter(ColoredFormatter(
-            u"[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s [%(prefix)-s] %(message_color)s%(message)s",
-            datefmt='%Y-%m-%d %H:%M:%S',
-            reset=True,
-            log_colors={
-                'DEBUG':    'cyan',
-                'INFO':     'green',
-                'WARNING':  'yellow',
-                'ERROR':    'red',
-                'CRITICAL': 'red,bg_white',
-            },
-            secondary_log_colors={
-                'message': {
+        # UnitTest Running? Write to STDOUT without colors for Assertions
+        if self.is_unittest():
+            handlerStream = logging.StreamHandler(sys.stdout)
+            handlerStream.setLevel(logging.DEBUG)
+            handlerStream.setFormatter(logging.Formatter(u"[%(asctime)s] %(levelname)-8s [%(prefix)-s] %(message)s"))
+            self._logger.addHandler(handlerStream)
+
+        # Handler: Console [ColorLog] - Supress on UnitTest to prevent log spamming
+        if self.is_unittest() is False:
+            handlerConsole = colorlog.StreamHandler()
+            handlerConsole.setLevel(logging.DEBUG)
+            handlerConsole.setFormatter(ColoredFormatter(
+                u"[%(asctime)s] %(log_color)s%(levelname)-8s%(reset)s [%(prefix)-s] %(message_color)s%(message)s",
+                datefmt='%Y-%m-%d %H:%M:%S',
+                reset=True,
+                log_colors={
+                    'DEBUG':    'cyan',
+                    'INFO':     'green',
+                    'WARNING':  'yellow',
                     'ERROR':    'red',
-                    'CRITICAL': 'red'
-                }
-            },
-            style='%'
-        ))
-        self._logger.addHandler(handlerConsole)
+                    'CRITICAL': 'red,bg_white',
+                },
+                secondary_log_colors={
+                    'message': {
+                        'ERROR':    'red',
+                        'CRITICAL': 'red'
+                    }
+                },
+                style='%'
+            ))
+            self._logger.addHandler(handlerConsole)
 
         # Handler: File
-        if self.config['logging']['log_to_file']:
+        if self.config is not None and self.config['logging']['log_to_file']:
             log_directory = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), self.config['logging']['log_directory'])
             log_directory_custom = None
 
@@ -92,7 +101,6 @@ class Logger(object):
             handlerFile.setFormatter(logging.Formatter(u"[%(asctime)s] %(levelname)-8s [%(prefix)-s] %(message)s"))
             self._logger.addHandler(handlerFile)
 
-    # pylint: disable=protected-access
     def getLogger(self, prefix=None):
         loggerInstance = copy.copy(self)
         loggerInstance.log_prefix = prefix
@@ -149,3 +157,14 @@ class Logger(object):
     # EventManager
     def setEventManager(self, event_manager):
         self.event_manager = event_manager
+
+    # Check for UnitTest
+    # Credits to http://stackoverflow.com/users/3803152/thesounddefense
+    @staticmethod
+    def is_unittest():
+        current_stack = inspect.stack()
+        for stack_frame in current_stack:
+            for program_line in stack_frame[4]:    # This element of the stack frame contains
+                if "unittest" in program_line:       # some contextual program lines
+                    return True
+        return False
