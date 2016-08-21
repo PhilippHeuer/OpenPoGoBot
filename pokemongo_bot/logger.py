@@ -165,6 +165,6 @@ class Logger(object):
         current_stack = inspect.stack()
         for stack_frame in current_stack:
             # returns None when running the tests
-            if stack_frame[4] == None:
+            if stack_frame[4] is None:
                 return True
         return False
