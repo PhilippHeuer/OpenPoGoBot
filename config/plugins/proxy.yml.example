@@ -19,10 +19,21 @@ proxy:
     enabled: True
 
     # Proxy use required? (required/optional)
-    mode: "required"
+    mode: "optional"
 
 # A list of proxy servers, if one is ip banned the bot will switch to the next one.
 proxylist:
+# requires tor to be installed
+    tor:
+        # Is the proxy server enabled?
+        enabled: False
+
+        # type: http/https/socks4/socks5
+        type: "socks5"
+
+        # ip address with port
+        address: "127.0.0.1:9050"
+
     https_0:
         # Is the proxy server enabled?
         enabled: True

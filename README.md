@@ -175,6 +175,7 @@ Here are the available plugins:
 | `recycle_items`    |
 | `spin_pokestop`    |
 | `transfer_pokemon` |
+| `proxy`            |
 | `socket`           |
 
 
