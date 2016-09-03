@@ -126,7 +126,7 @@ class CatchPokemon(Plugin):
             status = encounter_data.status
             if status is 5:
                 # Pokemon bag is full, fire event and return for now
-                self.log("Pokemon bag is full; cannot catch.", color="red")
+                self.logger.info("Pokemon bag is full; cannot catch.", color="red")
                 bot.fire("pokemon_bag_full")
                 return
             elif status is 1:
@@ -140,7 +140,7 @@ class CatchPokemon(Plugin):
                 pokemon_num = pokemon.pokemon_id - 1
                 pokemon_name = bot.pokemon_list[pokemon_num]["Name"]
 
-                self.log("A lured {} appeared! [CP {}] [Potential {}]".format(pokemon_name, combat_power, pokemon_potential))
+                self.logger.info("A lured {} appeared! [CP {}] [Potential {}]".format(pokemon_name, combat_power, pokemon_potential))
 
                 balls_stock = bot.player_service.get_pokeballs()
                 total_pokeballs = sum([balls_stock[ball_type] for ball_type in balls_stock])
@@ -152,7 +152,7 @@ class CatchPokemon(Plugin):
                 should_continue_throwing = True
                 while should_continue_throwing:
                     if total_pokeballs == 0:
-                        self.log("No Pokeballs in inventory; cannot catch.", color="red")
+                        self.logger.info("No Pokeballs in inventory; cannot catch.", color="red")
                         return
 
                     pokeball = 0
@@ -162,22 +162,22 @@ class CatchPokemon(Plugin):
 
                     if balls_stock[2] > 0:
                         if pokeball is 0 and combat_power <= 300 and balls_stock[2] < 10:
-                            self.log('Great Ball stock is low... saving for pokemon with cp greater than 300')
+                            self.logger.info('Great Ball stock is low... saving for pokemon with cp greater than 300')
                         elif combat_power > 300 or pokeball is 0:
                             pokeball = 2
 
                     if balls_stock[3] > 0:
                         if pokeball is 0 and combat_power <= 700 and balls_stock[3] < 10:
-                            self.log('Ultra Ball stock is low... saving for pokemon with cp greater than 700')
+                            self.logger.info('Ultra Ball stock is low... saving for pokemon with cp greater than 700')
                         elif combat_power > 700 or pokeball is 0:
                             pokeball = 3
 
                     if pokeball == 0:
-                        self.log("No ball selected as all balls are low in stock. Saving for better Pokemon.", color="red")
+                        self.logger.info("No ball selected as all balls are low in stock. Saving for better Pokemon.", color="red")
                         bot.fire('no_balls')
                         return
 
-                    self.log("Using {}... ({} left!)".format(bot.item_list[pokeball], balls_stock[pokeball]-1))
+                    self.logger.info("Using {}... ({} left!)".format(bot.item_list[pokeball], balls_stock[pokeball]-1))
 
                     balls_stock[pokeball] -= 1
                     total_pokeballs -= 1
@@ -188,7 +188,7 @@ class CatchPokemon(Plugin):
             elif status is 2 or status is 3 or status is 4:
                 return
             else:
-                self.log("I don't know what happened! Maybe servers are down?", color="red")
+                self.logger.warning("I don't know what happened! Maybe servers are down?", color="red")
                 return
 
     def throw_pokeball(self, bot, encounter_id, pokeball, spawn_point_id, pokemon, pos):
