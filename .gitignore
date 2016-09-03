@@ -34,7 +34,7 @@ config/plugins/*.yml
 
 # Test files
 .coverage
-api-test.txt
+api-*.txt
 
 # Sublime files
 *.sublime-project
